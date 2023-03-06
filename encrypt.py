@@ -27,7 +27,7 @@ def encrypt(video_name=""):
         .output(video_name + "_enc.mp4", codec='copy')
         .global_args('-y')
         .global_args('-encryption_scheme', 'cenc-aes-ctr')
-        .global_args('-encryption_key',  + secret_key)
+        .global_args('-encryption_key', secret_key)
         .global_args('-encryption_kid', secret_kid)
         .global_args('-report')
         .run()
