@@ -1,7 +1,7 @@
 import ffmpeg, secrets, sys, os
 
 
-def encrypt(video_name="") -> str:
+def encrypt(video_name="") -> str | None:
     """Encrypt a video to mp4 using the CENC-AES-CTR scheme.
 
     Args:
@@ -11,11 +11,8 @@ def encrypt(video_name="") -> str:
     """
 
     # check argument and file exists
-    if len(sys.argv) == 2:
+    if len(sys.argv) > 1:
         video_name = sys.argv[1]
-    else:
-        print("Too many arguments.")
-        return None
     
     if video_name == "":
         print("No file name specified.")
@@ -29,7 +26,7 @@ def encrypt(video_name="") -> str:
     secret_kid = secrets.token_hex(16)
     new_name = video_name.split('.')[0] + "_enc.mp4"
 
-    print("Encrypting...")
+    print("Encrypting.")
     (
         # proceed to ffmpeg encryption
         ffmpeg
