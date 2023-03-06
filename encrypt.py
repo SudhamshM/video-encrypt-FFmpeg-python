@@ -9,22 +9,29 @@ def encrypt(video_name="") -> str:
     Returns:
         The filename of the encrypted video.
     """
-    if len(sys.argv) > 1:
+
+    # check argument and file exists
+    if len(sys.argv) == 2:
         video_name = sys.argv[1]
+    else:
+        print("Too many arguments.")
+        return None
     
     if video_name == "":
         print("No file name specified.")
-        return
+        return None
     
     if not os.path.isfile(video_name):
         print("File doesn't exist, please provide correct path.")
-        return
-    
+        return None
+    # generate 32-character or 16-byte hex string
     secret_key = secrets.token_hex(16)
     secret_kid = secrets.token_hex(16)
     new_name = video_name.split('.')[0] + "_enc.mp4"
+
     print("Encrypting...")
     (
+        # proceed to ffmpeg encryption
         ffmpeg
         .input(video_name)
         .output(encryption_scheme='cenc-aes-ctr',
@@ -37,8 +44,10 @@ def encrypt(video_name="") -> str:
         .global_args('-y')
         .run()
     )
+
+    # write result to text file
     with open("result.txt", 'w+') as file:
-        file.write(video_name + "_enc.mp4 encrypted with key:kid below.\n")
+        file.write(new_name + " encrypted with key:kid below.\n")
         file.write(secret_key + ":" + secret_kid)
     print("Written to file.")
     return new_name
